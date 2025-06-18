@@ -106,6 +106,11 @@ app.post("/convert", upload.single("video"), async (req, res) => {
 
     console.log("✅ File received:", req.file);
 
+    // 🛠 Make sure outputs/ exists
+    if (!fs.existsSync("outputs")) {
+      fs.mkdirSync("outputs");
+    }
+
     const filePath = req.file.path;
     const baseName = path.basename(filePath);
     const gifPath = `outputs/${baseName}.gif`;
@@ -164,7 +169,7 @@ app.post("/convert", upload.single("video"), async (req, res) => {
     });
   } catch (err) {
     console.error("❌ Final catch error:", err.message);
-    return res.status(500).json({ error: "Failed to process video" });
+    return res.status(500).json({ error: err.message || "Failed to process video" });
   }
 });
 
